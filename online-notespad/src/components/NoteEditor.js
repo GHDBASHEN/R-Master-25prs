@@ -1,4 +1,18 @@
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
+
 export default function NoteEditor({ note, onChange }) {
+    // Custom toolbar configuration
+    const modules = {
+        toolbar: [
+            [{ header: [1, 2, false] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            ['blockquote', 'code-block'],
+            ['clean'] // remove formatting button
+        ]
+    };
+
     return (
         <div className="editor">
             <input
@@ -9,18 +23,21 @@ export default function NoteEditor({ note, onChange }) {
                 }
                 placeholder="Note title"
             />
-
-            <textarea
-                className="content-area"
-                value={note.content}
-                onChange={e =>
-                    onChange(note.id, {
-                        content: e.target.value,
-                        updatedAt: new Date().toISOString()
-                    })
-                }
-                placeholder="Write your note here..."
-            />
+            
+            <div className="editor-container">
+                <ReactQuill
+                    theme="snow"
+                    value={note.content}
+                    onChange={(content) => 
+                        onChange(note.id, { 
+                            content, 
+                            updatedAt: new Date().toISOString() 
+                        })
+                    }
+                    modules={modules}
+                    placeholder="Write your note here..."
+                />
+            </div>
         </div>
     );
 }
